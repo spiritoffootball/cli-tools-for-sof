@@ -8,28 +8,28 @@
  * Version: 1.0.0
  * Author URI: https://haystack.co.uk
  *
- * @package Command_Line_Tools_for_SOF
+ * @package Command_Line_Tools_For_SOF
  */
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 // Set our version here.
-define('COMMAND_LINE_SOF_VERSION', '1.0.0');
+define( 'COMMAND_LINE_SOF_VERSION', '1.0.0' );
 
 // Store reference to this file.
-if (!defined('COMMAND_LINE_SOF_FILE')) {
-  define('COMMAND_LINE_SOF_FILE', __FILE__);
+if ( ! defined( 'COMMAND_LINE_SOF_FILE' ) ) {
+	define( 'COMMAND_LINE_SOF_FILE', __FILE__ );
 }
 
 // Store URL to this plugin's directory.
-if (!defined('COMMAND_LINE_SOF_URL')) {
-  define('COMMAND_LINE_SOF_URL', plugin_dir_url(COMMAND_LINE_SOF_FILE));
+if ( ! defined( 'COMMAND_LINE_SOF_URL' ) ) {
+	define( 'COMMAND_LINE_SOF_URL', plugin_dir_url( COMMAND_LINE_SOF_FILE ) );
 }
 
 // Store PATH to this plugin's directory.
-if (!defined('COMMAND_LINE_SOF_PATH')) {
-  define('COMMAND_LINE_SOF_PATH', plugin_dir_path(COMMAND_LINE_SOF_FILE));
+if ( ! defined( 'COMMAND_LINE_SOF_PATH' ) ) {
+	define( 'COMMAND_LINE_SOF_PATH', plugin_dir_path( COMMAND_LINE_SOF_FILE ) );
 }
 
 /**
@@ -39,41 +39,41 @@ if (!defined('COMMAND_LINE_SOF_PATH')) {
  *
  * @since 1.0.0
  */
-class Command_Line_Tools_for_SOF {
+class Command_Line_Tools_For_SOF {
 
-  /**
-   * Constructor.
-   *
-   * @since 1.0.0
-   */
-  public function __construct() {
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct() {
 
-    // Load wp-cli tools.
-    $this->include_files();
+		// Load wp-cli tools.
+		$this->include_files();
 
-  }
+	}
 
-  /**
-   * Loads the wp-cli tools.
-   *
-   * @since 1.0.0
-   */
-  public function include_files() {
+	/**
+	 * Loads the wp-cli tools.
+	 *
+	 * @since 1.0.0
+	 */
+	public function include_files() {
 
-    // Bail if not wp-cli context.
-    if (!defined('WP_CLI')) {
-      return;
-    }
+		// Bail if not wp-cli context.
+		if ( ! defined( 'WP_CLI' ) ) {
+			return;
+		}
 
-    // Bail if not PHP 5.6+.
-    if (!version_compare(phpversion(), '5.6.0', '>=')) {
-      return;
-    }
+		// Bail if not PHP 5.6+.
+		if ( ! version_compare( phpversion(), '5.6.0', '>=' ) ) {
+			return;
+		}
 
-    // Load our wp-cli tools.
-    require COMMAND_LINE_SOF_PATH . 'includes/wp-cli-sof.php';
+		// Load our wp-cli tools.
+		require COMMAND_LINE_SOF_PATH . 'includes/wp-cli-sof.php';
 
-  }
+	}
 
 }
 
@@ -82,18 +82,18 @@ class Command_Line_Tools_for_SOF {
  *
  * @since 1.0.0
  *
- * @return CommentPress_Plugin $plugin The plugin reference.
+ * @return Command_Line_Tools_for_SOF $plugin The plugin reference.
  */
 function command_line_sof() {
 
-  // Maybe bootstrap plugin.
-  static $plugin;
-  if (!isset($plugin)) {
-    $plugin = new Command_Line_Tools_for_SOF();
-  }
+	// Maybe bootstrap plugin.
+	static $plugin;
+	if ( ! isset( $plugin ) ) {
+		$plugin = new Command_Line_Tools_For_SOF();
+	}
 
-  // Return reference.
-  return $plugin;
+	// Return reference.
+	return $plugin;
 
 }
 
