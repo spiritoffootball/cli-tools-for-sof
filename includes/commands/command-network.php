@@ -20,20 +20,20 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 	 * ## EXAMPLES
 	 *
 	 *       $ wp sof network spam-delete
-	 *       Deleting spam on site https://spiritoffootball.cmw/
-	 *       Deleting spam on site https://thebal.cmw/
-	 *       Deleting spam on site https://thebal.cmw/2014/
-	 *       Deleting spam on site https://thebal.cmw/2010/
-	 *       Deleting spam on site https://thebal.cmw/2006/
-	 *       Deleting spam on site https://thebal.cmw/2002/
-	 *       Deleting spam on site https://spirit-of-germany.cmw/
-	 *       Deleting spam on site https://thebal.cmw/2018/
-	 *       Deleting spam on site https://spirit-of-germany.cmw/sofgervorstand/
-	 *       Deleting spam on site https://spirit-of-germany.cmw/swfk/
-	 *       Deleting spam on site https://thebal.cmw/2022/
-	 *       Deleting spam on site https://thebal.cmw/2026/
-	 *       Deleting spam on site https://spiritoffootball.br.cmw/
-	 *       Deleting spam on site https://spirit-of-germany.cmw/mduw/
+	 *       Deleting spam on site https://spiritoffootball.cmw
+	 *       Deleting spam on site https://thebal.cmw
+	 *       Deleting spam on site https://thebal.cmw/2014
+	 *       Deleting spam on site https://thebal.cmw/2010
+	 *       Deleting spam on site https://thebal.cmw/2006
+	 *       Deleting spam on site https://thebal.cmw/2002
+	 *       Deleting spam on site https://spirit-of-germany.cmw
+	 *       Deleting spam on site https://thebal.cmw/2018
+	 *       Deleting spam on site https://spirit-of-germany.cmw/sofgervorstand
+	 *       Deleting spam on site https://spirit-of-germany.cmw/swfk
+	 *       Deleting spam on site https://thebal.cmw/2022
+	 *       Deleting spam on site https://thebal.cmw/2026
+	 *       Deleting spam on site https://spiritoffootball.br.cmw
+	 *       Deleting spam on site https://spirit-of-germany.cmw/mduw
 	 *       Success: All spam deleted.
 	 *
 	 * @subcommand spam-delete
@@ -61,11 +61,14 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 
 		foreach ( $urls as $url ) {
 
+			// Make sure URL has no trailing slash.
+			$url = untrailingslashit( $url );
+
 			WP_CLI::log( '' );
 			WP_CLI::log( sprintf( WP_CLI::colorize( '%GDeleting spam on site%n %Y%s%n' ), $url ) );
 
 			// Get the spam comment IDs.
-			$command = "comment list --status=spam --field=comment_ID --format=json --url='" . untrailingslashit( $url ) . "'";
+			$command = "comment list --status=spam --field=comment_ID --format=json --url='" . $url . "'";
 			WP_CLI::debug( $command, 'sof' );
 			$options = [
 				'launch' => true,
@@ -80,13 +83,45 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 			}
 
 			// Skip sites with no spam.
-			if ( empty( $spam_ids ) ) {
+			if ( ! empty( $spam_ids ) ) {
 
 				// Build arguments to delete them.
 				$spam_args = implode( ' ', $spam_ids );
 
 				// Delete the spam comments.
-				$command = "comment delete {$spam_args} --force --url='" . untrailingslashit( $url ) . "'";
+				$command = "comment delete {$spam_args} --force --url='" . $url . "'";
+				$options = [
+					'launch' => true,
+					'return' => true,
+				];
+				WP_CLI::debug( $command, 'sof' );
+				WP_CLI::runcommand( $command, $options );
+
+			}
+
+			// Get the spam feedback IDs.
+			$command = "post list --post_type=feedback --post_status=spam --field=ID --format=json --url='" . $url . "'";
+			WP_CLI::debug( $command, 'sof' );
+			$options = [
+				'launch' => true,
+				'return' => true,
+			];
+			$spam = WP_CLI::runcommand( $command, $options );
+
+			// Decode the returned JSON array. No other format seemed to work.
+			$spam_ids = json_decode( $spam, true );
+			if ( JSON_ERROR_NONE !== json_last_error() ) {
+				WP_CLI::error( sprintf( WP_CLI::colorize( 'Failed to decode JSON: %Y%s.%n' ), json_last_error_msg() ) );
+			}
+
+			// Skip sites with no spam.
+			if ( ! empty( $spam_ids ) ) {
+
+				// Build arguments to delete them.
+				$spam_args = implode( ' ', $spam_ids );
+
+				// Delete the spam comments.
+				$command = "post delete {$spam_args} --force --url='" . $url . "'";
 				$options = [
 					'launch' => true,
 					'return' => true,
