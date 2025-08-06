@@ -29,6 +29,9 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 	/**
 	 * Delete spam comments and JetPack Contact Form Submissions.
 	 *
+	 * Use the `--all` flag with caution - it has crashed our server in the past. It is,
+	 * however, useful for locahost development.
+	 *
 	 * ## OPTIONS
 	 *
 	 * [--type=<type>]
