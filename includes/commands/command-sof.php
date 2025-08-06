@@ -4,8 +4,13 @@
  *
  * ## EXAMPLES
  *
- *       # Download the latest stable CiviCRM core archive.
- *       $ wp sof core download
+ *       # Delete spam Jetpack Form Submissions on a specific site.
+ *       $ wp sof network spam-delete --url=https://spiritoffootball.cmw --type=feedback
+ *       Success: All spam feedback deleted.
+ *
+ *       # Delete spam Comments on a specific site.
+ *       $ wp sof network spam-delete --url=https://spiritoffootball.cmw --type=comment
+ *       Success: All spam comments deleted.
  *
  * @since 1.0.0
  *
