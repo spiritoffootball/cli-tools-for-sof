@@ -34,7 +34,7 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 	 *
 	 * @param string $tarfile The path to the tarfile.
 	 * @param string $destination The path to extract to.
-	 * @param bool $delete True deletes the zip archive once extracted. Default to true.
+	 * @param bool   $delete True deletes the zip archive once extracted. Default to true.
 	 * @return bool True if successful, false otherwise.
 	 */
 	protected function untar( $tarfile, $destination, $delete = true ) {
@@ -50,21 +50,21 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 		}
 
 		// Let's handle errors here.
-		$exit_on_error = false;
+		$exit_on_error   = false;
 		$return_detailed = true;
 
 		WP_CLI::log( WP_CLI::colorize( '%GExtracting tar.gz archive...%n' ) );
 
 		// First unpack the gz archive.
-		$command = "gzip -d $tarfile";
+		$command     = "gzip -d $tarfile";
 		$process_run = WP_CLI::launch( $command, $exit_on_error, $return_detailed );
 		if ( 0 !== $process_run->return_code ) {
 			WP_CLI::error( sprintf( WP_CLI::colorize( 'Failed to extract gz archive: %y%s.%n' ), $this->stderr_error_msg( $process_run ) ) );
 		}
 
 		// Next unpack the tarball.
-		$tarfile = substr( $tarfile, 0, strlen( $tarfile ) - 3 );
-		$command = "tar -xf $tarfile -C \"$destination\"";
+		$tarfile     = substr( $tarfile, 0, strlen( $tarfile ) - 3 );
+		$command     = "tar -xf $tarfile -C \"$destination\"";
 		$process_run = WP_CLI::launch( $command, $exit_on_error, $return_detailed );
 		if ( 0 !== $process_run->return_code ) {
 			WP_CLI::error( sprintf( WP_CLI::colorize( 'Failed to extract tarball: %y%s.%n' ), $this->stderr_error_msg( $process_run ) ) );
@@ -93,7 +93,7 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 	 *
 	 * @param string $zipfile The path to the zipfile.
 	 * @param string $destination The path to extract to.
-	 * @param bool $delete True deletes the zip archive once extracted. Defaults to true.
+	 * @param bool   $delete True deletes the zip archive once extracted. Defaults to true.
 	 * @return bool True if successful, false otherwise.
 	 */
 	protected function unzip( $zipfile, $destination, $delete = true ) {
@@ -111,11 +111,11 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 		WP_CLI::log( WP_CLI::colorize( '%GExtracting zip archive...%n' ) );
 
 		// Let's handle errors here.
-		$exit_on_error = false;
+		$exit_on_error   = false;
 		$return_detailed = true;
 
 		// Run the command.
-		$command = "unzip -q $zipfile -d $destination";
+		$command     = "unzip -q $zipfile -d $destination";
 		$process_run = WP_CLI::launch( $command, $exit_on_error, $return_detailed );
 		if ( 0 !== $process_run->return_code ) {
 			WP_CLI::error( sprintf( WP_CLI::colorize( 'Failed to extract zip archive: %y%s.%n' ), $this->unzip_error_msg( $process_run->return_code ) ) );
@@ -158,11 +158,11 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 		WP_CLI::log( WP_CLI::colorize( '%GCompressing zip archive...%n' ) );
 
 		// Let's handle errors here.
-		$exit_on_error = false;
+		$exit_on_error   = false;
 		$return_detailed = true;
 
 		// Run the command.
-		$command = 'pushd ' . dirname( $directory ) . '; ' . "zip -rq {$destination} ./" . basename( $directory ) . '; popd';
+		$command     = 'pushd ' . dirname( $directory ) . '; ' . "zip -rq {$destination} ./" . basename( $directory ) . '; popd';
 		$process_run = WP_CLI::launch( $command, $exit_on_error, $return_detailed );
 		if ( 0 !== $process_run->return_code ) {
 			WP_CLI::error( sprintf( WP_CLI::colorize( 'Failed to compress zip archive: %y%s.%n' ), $this->zip_error_msg( $process_run->return_code ) ) );
@@ -184,7 +184,7 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 	 *
 	 * @param string $zipfile The path to the zipfile.
 	 * @param string $destination The directory name to extract to.
-	 * @param array $options The array of extraction options.
+	 * @param array  $options The array of extraction options.
 	 * @return bool True if successful, false otherwise.
 	 */
 	protected function zip_extract( $zipfile, $destination, $options = [] ) {
@@ -198,7 +198,7 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 		$result = $extractor->extract( $zipfile, $destination, $options );
 
 		// Trap any problems.
-		if ( $result === false ) {
+		if ( false === $result ) {
 			WP_CLI::error( 'Unable to connect to the filesystem.' );
 		}
 		if ( is_wp_error( $result ) ) {
@@ -229,7 +229,7 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 		$result = $overwriter->restore( $zipfile, $destination );
 
 		// Trap any problems.
-		if ( $result === false ) {
+		if ( false === $result ) {
 			WP_CLI::error( 'Unable to connect to the filesystem.' );
 		}
 		if ( is_wp_error( $result ) ) {
@@ -282,16 +282,16 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 	private function unzip_error_msg( $error_code ) {
 
 		$zip_err_msgs = [
-			0 => 'No errors or warnings detected.',
-			1 => 'One or more warning errors were encountered, but processing completed successfully anyway. This includes zipfiles where one or more files was skipped due to unsupported compression method or encryption with an unknown password.',
-			2 => 'A generic error in the zipfile format was detected. Processing may have completed successfully anyway; some broken zipfiles created by other archivers have simple work-arounds.',
-			3 => 'A severe error in the zipfile format was detected. Processing probably failed immediately.',
-			4 => 'unzip was unable to allocate memory for one or more buffers during program initialization.',
-			5 => 'unzip was unable to allocate memory or unable to obtain a tty to read the decryption password(s).',
-			6 => 'unzip was unable to allocate memory during decompression to disk.',
-			7 => 'unzip was unable to allocate memory during in-memory decompression.',
-			8 => '[currently not used]',
-			9 => 'The specified zipfiles were not found.',
+			0  => 'No errors or warnings detected.',
+			1  => 'One or more warning errors were encountered, but processing completed successfully anyway. This includes zipfiles where one or more files was skipped due to unsupported compression method or encryption with an unknown password.',
+			2  => 'A generic error in the zipfile format was detected. Processing may have completed successfully anyway; some broken zipfiles created by other archivers have simple work-arounds.',
+			3  => 'A severe error in the zipfile format was detected. Processing probably failed immediately.',
+			4  => 'unzip was unable to allocate memory for one or more buffers during program initialization.',
+			5  => 'unzip was unable to allocate memory or unable to obtain a tty to read the decryption password(s).',
+			6  => 'unzip was unable to allocate memory during decompression to disk.',
+			7  => 'unzip was unable to allocate memory during in-memory decompression.',
+			8  => '[currently not used]',
+			9  => 'The specified zipfiles were not found.',
 			10 => 'Invalid options were specified on the command line.',
 			11 => 'No matching files were found.',
 			50 => 'The disk is (or was) full during extraction.',
@@ -320,15 +320,15 @@ abstract class CLI_Tools_SOF_Command_Base extends \WP_CLI\CommandWithDBObject {
 	private function zip_error_msg( $error_code ) {
 
 		$zip_err_msgs = [
-			0 => 'No errors or warnings detected.',
-			2 => 'Unexpected end of zip file.',
-			3 => 'A generic error in the zipfile format was detected. Processing may have completed successfully anyway; some broken zipfiles created by other archivers have simple work-arounds..',
-			4 => 'zip was unable to allocate memory for one or more buffers during program initialization.',
-			5 => 'A severe error in the zipfile format was detected. Processing probably failed immediately.',
-			6 => 'Entry too large to be processed (such as input files larger than 2 GB when not using Zip64 or trying to read an existing archive that is too large) or entry too large to be split with zipsplit',
-			7 => 'Invalid comment format.',
-			8 => 'zip -T failed or out of memory',
-			9 => 'The user aborted zip prematurely with control-C (or similar).',
+			0  => 'No errors or warnings detected.',
+			2  => 'Unexpected end of zip file.',
+			3  => 'A generic error in the zipfile format was detected. Processing may have completed successfully anyway; some broken zipfiles created by other archivers have simple work-arounds..',
+			4  => 'zip was unable to allocate memory for one or more buffers during program initialization.',
+			5  => 'A severe error in the zipfile format was detected. Processing probably failed immediately.',
+			6  => 'Entry too large to be processed (such as input files larger than 2 GB when not using Zip64 or trying to read an existing archive that is too large) or entry too large to be split with zipsplit',
+			7  => 'Invalid comment format.',
+			8  => 'zip -T failed or out of memory',
+			9  => 'The user aborted zip prematurely with control-C (or similar).',
 			10 => 'zip encountered an error while using a temp file.',
 			11 => 'read or seek error.',
 			12 => 'zip has nothing to do.',

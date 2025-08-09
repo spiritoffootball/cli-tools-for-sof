@@ -76,7 +76,7 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 		];
 
 		// Grab URL from config.
-		$url = '';
+		$url           = '';
 		$wp_cli_config = WP_CLI::get_config();
 		if ( ! empty( $wp_cli_config['url'] ) ) {
 			$url = $wp_cli_config['url'];
@@ -105,7 +105,7 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 			}
 
 			// Bail if not a BBPress role.
-			if ( ! in_array( $name, $roles ) ) {
+			if ( ! in_array( $name, $roles, true ) ) {
 				WP_CLI::error( sprintf( WP_CLI::colorize( 'Unknown role: %Y%s%n' ), $name ) );
 			}
 
@@ -169,11 +169,11 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 		// Maybe process all Site URLs.
 		if ( ! empty( $all_sites ) ) {
 
-			$options = [
+			$options    = [
 				'launch' => false,
 				'return' => true,
 			];
-			$command = 'site list --field=url --format=json';
+			$command    = 'site list --field=url --format=json';
 			$urls_array = WP_CLI::runcommand( $command, $options );
 
 			// Try and decode response.
@@ -181,9 +181,6 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 			if ( JSON_ERROR_NONE !== json_last_error() ) {
 				WP_CLI::error( sprintf( WP_CLI::colorize( 'Failed to decode JSON: %Y%s.%n' ), json_last_error_msg() ) );
 			}
-
-			WP_CLI::debug( print_r( $urls, true ), 'sof' );
-			return;
 
 			// Delete all spam for each Site URL.
 			foreach ( $urls as $url ) {
@@ -198,7 +195,7 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 		} else {
 
 			// Grab URL from config.
-			$url = '';
+			$url           = '';
 			$wp_cli_config = WP_CLI::get_config();
 			if ( ! empty( $wp_cli_config['url'] ) ) {
 				$url = $wp_cli_config['url'];
@@ -282,7 +279,7 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 			'launch' => $launch,
 			'return' => true,
 		];
-		$spam = WP_CLI::runcommand( $command, $options );
+		$spam    = WP_CLI::runcommand( $command, $options );
 
 		// Decode the returned JSON array.
 		$spam_ids = json_decode( $spam, true );
@@ -345,7 +342,7 @@ class CLI_Tools_SOF_Command_Network extends CLI_Tools_SOF_Command {
 			'launch' => $launch,
 			'return' => true,
 		];
-		$spam = WP_CLI::runcommand( $command, $options );
+		$spam    = WP_CLI::runcommand( $command, $options );
 
 		// Decode the returned JSON array.
 		$spam_ids = json_decode( $spam, true );

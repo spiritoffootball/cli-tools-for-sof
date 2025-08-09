@@ -29,9 +29,9 @@ class CLI_Tools_SOF_Command extends CLI_Tools_SOF_Command_Base {
 	private function command_to_array( $command ) {
 
 		$info = [
-			'name' => $command->get_name(),
+			'name'        => $command->get_name(),
 			'description' => $command->get_shortdesc(),
-			'longdesc' => $command->get_longdesc(),
+			'longdesc'    => $command->get_longdesc(),
 		];
 
 		foreach ( $command->get_subcommands() as $subcommand ) {
