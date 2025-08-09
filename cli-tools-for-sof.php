@@ -1,12 +1,18 @@
 <?php
 /**
- * Plugin Name: Command Line Tools for Spirit of Football
- * Plugin URI: https://github.com/spiritoffootball/cli-tools-for-sof
+ * Command Line Tools for Spirit of Football
+ *
+ * Plugin Name:       Command Line Tools for Spirit of Football
+ * Description:       Manage aspects of the Spirit of Football website through the command line.
+ * Version:           1.0.0
+ * Plugin URI:        https://github.com/spiritoffootball/cli-tools-for-sof
  * GitHub Plugin URI: https://github.com/spiritoffootball/cli-tools-for-sof
- * Description: Manage aspects of the Spirit of Football website through the command line.
- * Author: Christian Wach
- * Version: 1.0.0
- * Author URI: https://haystack.co.uk
+ * Author:            Christian Wach
+ * Author URI:        https://haystack.co.uk
+ * Requires at least: 5.7
+ * Requires PHP:      7.4
+ * License:           GPLv2 or later
+ * License URI:       https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
  * @package Command_Line_Tools_For_SOF
  */
